@@ -4,15 +4,8 @@
 score = ARGV[0]
 scores = score.split(',')
 
-# 数字の配列と基本ポイント合計
-shots = []
-scores.each do |s|
-  shots <<  if s == 'X'
-              10
-            else
-              s.to_i
-            end
-end
+# 数字の配列を作る
+shots = scores.collect { |s| s == 'X' ? 10 : s.to_i }
 
 # ストライクとスペアのボーナス計算(9フレームまで)
 number = 0 # 配列内の位置
