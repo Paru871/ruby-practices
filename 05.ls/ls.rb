@@ -2,10 +2,13 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require 'etc'
+
+NUMBER_OF_COLUMNS = 3 # 列数を指定、3列で表示（列数変更可)
 
 def main
   options = ARGV.getopts('a', 'r', 'l')
-  files = Dir.glob('*').sort
+  files = Dir.glob('*').sort unless options['a']
   files = Dir.glob(['*', '.*']).sort if options['a']
   files.reverse! if options['r']
   if options['l']
@@ -17,14 +20,12 @@ end
 
 # 3列で表示（列数変更可)
 def print_column(files)
-  number_of_columns = 3 # 列数を指定
-  terminal_width =  `tput cols`.chomp.to_i # ターミナルの横幅取得
-
-  row_width = terminal_width / number_of_columns # 1列の幅を算出
-  number_of_rows = files.length / number_of_columns + 1 #  段数を算出
+  terminal_width = `tput cols`.chomp.to_i # ターミナルの横幅取得
+  row_width = terminal_width / NUMBER_OF_COLUMNS # 1列の幅を算出
+  number_of_rows = files.length / NUMBER_OF_COLUMNS + 1 #  段数を算出
 
   number_of_rows.times do |count|
-    number_of_columns.times do |idx|
+    NUMBER_OF_COLUMNS.times do |idx|
       if files[count + idx * number_of_rows].nil?
         print ''
       else
@@ -63,16 +64,13 @@ def convert_permission(digit)
 end
 
 def print_list(files)
-  require 'etc'
-
   total_blocks = 0
-  option_l_array = []
 
-  files.each do |file|
+  option_l_array = files.each_with_object([]) do |file, array|
     stat = File::Stat.new(file)
     total_blocks += stat.blocks
-    option_l_array << [make_permission(stat), stat.nlink, Etc.getpwuid(stat.uid).name,
-                       Etc.getgrgid(stat.gid).name, stat.size, stat.mtime.strftime('%-m  %-d %k:%M'), file]
+    array << [make_permission(stat), stat.nlink, Etc.getpwuid(stat.uid).name,
+              Etc.getgrgid(stat.gid).name, stat.size, stat.mtime.strftime('%-m  %-d %k:%M'), file]
   end
 
   puts "total #{total_blocks}"
