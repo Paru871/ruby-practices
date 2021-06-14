@@ -8,9 +8,15 @@ NUMBER_OF_COLUMNS = 3 # 列数を指定、3列で表示（列数変更可)
 
 def main
   options = ARGV.getopts('a', 'r', 'l')
-  files = Dir.glob('*').sort unless options['a']
-  files = Dir.glob(['*', '.*']).sort if options['a']
+
+  files = if options['a']
+            Dir.glob(['*', '.*']).sort
+          else
+            Dir.glob('*').sort
+          end
+
   files.reverse! if options['r']
+
   if options['l']
     print_list(files)
   else
@@ -36,6 +42,7 @@ def print_column(files)
   end
 end
 
+# オプションlのパーミッション部分の変換と作成
 def make_permission(stat)
   case stat.ftype
   when 'directory' then file_type = 'd'
@@ -63,18 +70,26 @@ def convert_permission(digit)
   permission[digit]
 end
 
+# オプションlの出力
 def print_list(files)
-  total_blocks = 0
-
-  option_l_array = files.each_with_object([]) do |file, array|
-    stat = File::Stat.new(file)
-    total_blocks += stat.blocks
-    array << [make_permission(stat), stat.nlink, Etc.getpwuid(stat.uid).name,
-              Etc.getgrgid(stat.gid).name, stat.size, stat.mtime.strftime('%-m  %-d %k:%M'), file]
+  # 先に前データの stats を作っておく
+  row_data = files.map do |file|
+    { stats: File::Stat.new(file), file: file }
   end
-
+  # トータルのブロック数を算出と出力
+  total_blocks = row_data.sum { |hash| hash[:stats].blocks }
   puts "total #{total_blocks}"
-  option_l_array.each do |output_l|
+  # データ出力
+  row_data.each do |data|
+    output_l = [
+      make_permission(data[:stats]),
+      data[:stats].nlink,
+      Etc.getpwuid(data[:stats].uid).name,
+      Etc.getgrgid(data[:stats].gid).name,
+      data[:stats].size,
+      data[:stats].mtime.strftime('%-m %-d %k:%M'),
+      data[:file]
+    ]
     puts output_l.join('  ')
   end
 end
