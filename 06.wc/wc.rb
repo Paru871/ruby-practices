@@ -2,91 +2,57 @@
 # frozen_string_literal: true
 
 require 'optparse'
+ROW_WIDTH = 8
 
 def main
-  options = ARGV.getopts('l')
+  @options = ARGV.getopts('l')
   read_files = ARGV
-
-  if options ['l'] && read_files.empty? # オプションlありでファイル指定無し(標準入力)
-    standard_input_l
-  elsif options ['l']                   # オプションlありでファイル指定あり
-    options_l_with_file(read_files)
-  elsif read_files.empty?               # オプションl無しでァイル指定無し(標準入力)
+  if read_files.empty? # ファイル指定無し(標準入力)
     standard_input
-  else                                  # オプションl無しでファイル指定あり
+  else                 # ファイル指定あり
     file_operation(read_files)
   end
 end
 
-# オプションlありで標準入力時の処理
-def standard_input_l
-  input = $stdin.read
-  print count_lines(input).to_s.rjust(8)
-  print "\n"
-end
-
-# オプションlありでファイルが指定された時の処理
-def options_l_with_file(read_files)
-  total_lines = 0
-  read_files.each do |file|
-    string = File.read(file)
-    print count_lines(string).to_s.rjust(8)
-    print " #{file}\n"
-    total_lines += count_lines(string)
-  end
-  return unless read_files.length != 1 # ファイルが１つのみの場合はtotal出力なし
-
-  print total_lines.to_s.rjust(8)
-  print " total\n"
-end
-
-# オプションl無しで標準入力時の処理
+# ファイル指定無しで標準入力時の処理
 def standard_input
   input = $stdin.read
-  print count_lines(input).to_s.rjust(8)
-  print count_words(input).to_s.rjust(8)
-  print count_bytes(input).to_s.rjust(8)
+  print input.lines.count.to_s.rjust(ROW_WIDTH)
+  unless @options ['l']
+    array = input.split(/\s+/)
+    print array.size.to_s.rjust(ROW_WIDTH)
+    print input.bytesize.to_s.rjust(ROW_WIDTH)
+  end
   print "\n"
 end
 
-# オプションl無しでファイルが指定された時の処理
+# ファイルが指定された時の処理
 def file_operation(read_files)
-  total_lines = 0
-  total_words = 0
-  total_bytes = 0
+  @total_lines = 0
+  @total_words = 0
+  @total_bytes = 0
   read_files.each do |file|
     string = File.read(file)
-    print count_lines(string).to_s.rjust(8)
-    print count_words(string).to_s.rjust(8)
-    print count_bytes(string).to_s.rjust(8)
+    array = string.split(/\s+/)
+    print string.lines.count.to_s.rjust(ROW_WIDTH)
+    unless @options ['l']
+      print array.size.to_s.rjust(ROW_WIDTH)
+      print string.bytesize.to_s.rjust(ROW_WIDTH)
+    end
     print " #{file}\n"
-    total_lines += count_lines(string)
-    total_words += count_words(string)
-    total_bytes += count_bytes(string)
+    @total_lines += string.lines.count
+    @total_words += array.size
+    @total_bytes += string.bytesize
   end
+  output_total_lines if read_files[1] # ファイルが2つ以上の時total行出力
+end
 
-  return unless read_files.length != 1 # ファイルが１つのみの場合はtotal出力なし
-
-  print total_lines.to_s.rjust(8)
-  print total_words.to_s.rjust(8)
-  print total_bytes.to_s.rjust(8)
+# total行出力
+def output_total_lines
+  print @total_lines.to_s.rjust(ROW_WIDTH)
+  print @total_words.to_s.rjust(ROW_WIDTH) unless @options ['l']
+  print @total_bytes.to_s.rjust(ROW_WIDTH) unless @options ['l']
   print " total\n"
-end
-
-# 行数のカウント
-def count_lines(string)
-  string.lines.count
-end
-
-# 単語数のカウント
-def count_words(string)
-  array = string.split(/\s+/)
-  array.size
-end
-
-# バイト数のカウント
-def count_bytes(string)
-  string.bytesize
 end
 
 main
