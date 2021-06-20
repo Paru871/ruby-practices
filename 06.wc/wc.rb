@@ -17,12 +17,7 @@ end
 # ファイル指定無しで標準入力時の処理
 def standard_input
   input = $stdin.read
-  print input.lines.count.to_s.rjust(ROW_WIDTH)
-  unless @options ['l']
-    array = input.split(/\s+/)
-    print array.size.to_s.rjust(ROW_WIDTH)
-    print input.bytesize.to_s.rjust(ROW_WIDTH)
-  end
+  output_section(input) # 集計と出力のメソッドへ
   print "\n"
 end
 
@@ -33,26 +28,27 @@ def file_operation(read_files)
   @total_bytes = 0
   read_files.each do |file|
     string = File.read(file)
-    array = string.split(/\s+/)
-    print string.lines.count.to_s.rjust(ROW_WIDTH)
-    unless @options ['l']
-      print array.size.to_s.rjust(ROW_WIDTH)
-      print string.bytesize.to_s.rjust(ROW_WIDTH)
-    end
+    output_section(string) # 集計と出力のメソッドへ
     print " #{file}\n"
     @total_lines += string.lines.count
-    @total_words += array.size
+    @total_words += string.split(/\s+/).size
     @total_bytes += string.bytesize
   end
-  output_total_lines if read_files[1] # ファイルが2つ以上の時total行出力
-end
+  return unless read_files[1] # ファイルが1つの時はtotal行出力しないでreturn
 
-# total行出力
-def output_total_lines
   print @total_lines.to_s.rjust(ROW_WIDTH)
   print @total_words.to_s.rjust(ROW_WIDTH) unless @options ['l']
   print @total_bytes.to_s.rjust(ROW_WIDTH) unless @options ['l']
   print " total\n"
+end
+
+# 集計と出力
+def output_section(string)
+  print string.lines.count.to_s.rjust(ROW_WIDTH)
+  return if @options ['l'] # オプションlありのときは以下出力しないでretuen
+
+  print string.split(/\s+/).size.to_s.rjust(ROW_WIDTH)
+  print string.bytesize.to_s.rjust(ROW_WIDTH)
 end
 
 main
