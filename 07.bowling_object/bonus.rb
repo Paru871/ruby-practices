@@ -14,19 +14,13 @@ class Bonus
     9.times do
       if strike?
         strike_bonus
-        @number += 1
       elsif spare?
         spare_bonus
-        @number += 2
       else
         @number += 2
       end
     end
     @bonus
-  end
-
-  def calc_sum
-    @shots.sum
   end
 
   private
@@ -38,6 +32,7 @@ class Bonus
   def strike_bonus
     @bonus += @shots[@number + 1]
     @bonus += @shots[@number + 2]
+    @number += 1
   end
 
   def spare?
@@ -46,5 +41,6 @@ class Bonus
 
   def spare_bonus
     @bonus += @shots[@number + 2]
+    @number += 2
   end
 end

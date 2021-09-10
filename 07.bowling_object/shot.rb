@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 class Shot
-  # 数字の配列を作る
   def initialize(input)
     @input = input
   end
