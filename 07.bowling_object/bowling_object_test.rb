@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require './game'
-require './shot'
-require './bonus'
+require_relative 'game'
+require_relative 'shot'
+require_relative 'bonus'
 
 class BowlingObjectTest < Minitest::Test
   def test_bowling_sample01
