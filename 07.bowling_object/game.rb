@@ -16,7 +16,7 @@ class Game
   def cal_frames(score)
     scores = score.split(',')
     points = []
-    index = 0 # 配列内のフレーム開始位置
+    index = 0 # 配列内の各フレーム開始位置
     10.times do |number|
       frame = Frame.new(scores[index, 3], number)
       point, shot_num = frame.frame_score
