@@ -32,22 +32,40 @@ class Frame
   end
 
   def spare?
-    @shot_one.score + @shot_two.score == 10
+    # @shot_one.score + @shot_two.score == 10
+    #[@shot_one, @shot_two].map(&:score).sum == 10
+    two_shots_sum == 10
   end
 
   def tenth_frame_scores
-    [@shot_one.score + @shot_two.score + @shot_three.score, 0]
+   # [@shot_one.score + @shot_two.score + @shot_three.score, 0]
+    # [[@shot_one, @shot_two, @shot_three].map(&:score).sum, 0]
+    [three_shots_sum, 0]
   end
 
   def strike_scores
-    [@shot_one.score + @shot_two.score + @shot_three.score, 1]
+    #[@shot_one.score + @shot_two.score + @shot_three.score, 1]
+    # [[@shot_one, @shot_two, @shot_three].map(&:score).sum, 1]
+    [three_shots_sum, 1]
   end
 
   def spare_scores
-    [@shot_one.score + @shot_two.score + @shot_three.score, 2]
+    #[@shot_one.score + @shot_two.score + @shot_three.score, 2]
+    [three_shots_sum, 2]
   end
 
   def other_scores
-    [@shot_one.score + @shot_two.score, 2]
+    #[@shot_one.score + @shot_two.score, 2]
+    [two_shots_sum, 2]
   end
+
+  def three_shots_sum
+    [@shot_one, @shot_two, @shot_three].map(&:score).sum
+  end
+
+  def two_shots_sum
+    [@shot_one, @shot_two].map(&:score).sum
+  end
+
+
 end

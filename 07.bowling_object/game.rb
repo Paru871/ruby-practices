@@ -7,20 +7,23 @@ class Game
     @points = cal_frames(score)
   end
 
+  def total_score
+    @points.sum
+  end
+  
+  private
+  
   def cal_frames(score)
     scores = score.split(',')
     points = []
     index = 0 # 配列内のフレーム開始位置
     10.times do |number|
       frame = Frame.new(scores[index, 3], number)
-      frame_points = frame.frame_score
-      points << frame_points[0]
-      index += frame_points[1]
+      point,shot_num = frame.frame_score
+      points << point
+      index += shot_num
     end
     points
   end
 
-  def total_score
-    @points.sum
-  end
 end
