@@ -19,9 +19,9 @@ class Game
     index = 0 # 配列内の各フレーム開始位置
     10.times do |number|
       frame = Frame.new(scores[index, 3], number)
-      point, shot_num = frame.frame_score
+      point, index_num = frame.frame_score
       points << point
-      index += shot_num
+      index += index_num
     end
     points
   end
