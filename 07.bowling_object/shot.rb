@@ -4,7 +4,7 @@
 class Shot
   attr_reader :score
 
-  def initialize(shot)
-    @score = (shot == 'X' ? 10 : shot.to_i)
+  def initialize(mark)
+    @score = (mark == 'X' ? 10 : mark.to_i)
   end
 end
