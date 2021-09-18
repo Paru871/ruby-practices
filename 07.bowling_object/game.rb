@@ -4,12 +4,23 @@
 class Game
   def initialize(score)
     @score = score
+    @points = cal_frames(score)
+  end
+
+  def cal_frames(score)
+    scores = score.split(',')
+    points = []
+    index = 0 # 配列内のフレーム開始位置
+    10.times do |number|
+      frame = Frame.new(scores[index, 3], number)
+      frame_points = frame.frame_score
+      points << frame_points[0]
+      index += frame_points[1]
+    end
+    points
   end
 
   def total_score
-    @scores = Shot.new(@score).separate_scores
-    @shots = Shot.new(@scores).create_num_scores
-    @bonus = Bonus.new(@scores, @shots).calc_bonus
-    @shots.sum + @bonus
+    @points.sum
   end
 end

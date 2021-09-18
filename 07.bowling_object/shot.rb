@@ -2,15 +2,11 @@
 # frozen_string_literal: true
 
 class Shot
-  def initialize(input)
-    @input = input
+  def initialize(shot)
+    @shot = shot
   end
 
-  def separate_scores
-    @input.split(',')
-  end
-
-  def create_num_scores
-    @input.map { |s| s == 'X' ? 10 : s.to_i }
+  def score
+    @shot == 'X' ? 10 : @shot.to_i
   end
 end

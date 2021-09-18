@@ -3,7 +3,7 @@
 require 'minitest/autorun'
 require_relative 'game'
 require_relative 'shot'
-require_relative 'bonus'
+require_relative 'frame'
 
 class BowlingObjectTest < Minitest::Test
   def test_bowling_sample01
