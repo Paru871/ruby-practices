@@ -4,9 +4,9 @@
 class Frame
   def initialize(three_shots, number)
     @number = number
-    @shot_one  = Shot.new(three_shots[0])
+    @shot_one = Shot.new(three_shots[0])
     @shot_two = Shot.new(three_shots[1])
-    @shot_three  = Shot.new(three_shots[2])
+    @shot_three = Shot.new(three_shots[2])
   end
 
   def frame_score
@@ -36,18 +36,18 @@ class Frame
   end
 
   def tenth_frame_scores
-    [ @shot_one.score + @shot_two.score + @shot_three.score, 0 ]
+    [@shot_one.score + @shot_two.score + @shot_three.score, 0]
   end
 
   def strike_scores
-    [ @shot_one.score + @shot_two.score + @shot_three.score, 1 ]
+    [@shot_one.score + @shot_two.score + @shot_three.score, 1]
   end
 
   def spare_scores
-    [ @shot_one.score + @shot_two.score + @shot_three.score, 2 ]
+    [@shot_one.score + @shot_two.score + @shot_three.score, 2]
   end
 
   def other_scores
-    [ @shot_one.score + @shot_two.score, 2 ]
+    [@shot_one.score + @shot_two.score, 2]
   end
 end
