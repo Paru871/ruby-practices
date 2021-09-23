@@ -17,7 +17,6 @@ TERMINAL_WIDTH = `tput cols`.chomp.to_i # ターミナルの横幅取得
 # p options = ARGV.getopts('a', 'r', 'l')
 # Command.new(pathname, options).ls_print
 
-
 opt = OptionParser.new
 params = { long_format: false, reverse: false, dot_match: false }
 opt.on('-l') { |v| params[:long_format] = v }
