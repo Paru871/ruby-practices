@@ -17,10 +17,9 @@ class LongFormat
     @files = files
   end
 
-  # オプションlの出力
   def print_list
     row_data = @files.map do |file|
-      { stats: File::Stat.new(file), file: file, filename: File.basename(file)}
+      { stats: File::Stat.new(file), file: file, filename: File.basename(file) }
     end
 
     total_blocks = row_data.sum { |hash| hash[:stats].blocks }
