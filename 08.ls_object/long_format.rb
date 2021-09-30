@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 class LongFormat
@@ -26,7 +25,7 @@ class LongFormat
     puts "total #{total_blocks}"
 
     row_data.each do |data|
-      output_l = [
+      output = [
         make_permission(data[:stats]),
         data[:stats].nlink.to_s.rjust(4),
         Etc.getpwuid(data[:stats].uid).name,
@@ -35,7 +34,7 @@ class LongFormat
         data[:stats].mtime.strftime('%_m %e %R'),
         data[:filename]
       ]
-      puts output_l.join('  ')
+      puts output.join('  ')
     end
   end
 

@@ -1,7 +1,9 @@
-#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 class ShortFormat
+  NUMBER_OF_COLUMNS = 3 # 列数を指定、3列で表示（列数変更可)
+  TERMINAL_WIDTH = `tput cols`.chomp.to_i # ターミナルの横幅取得
+
   def initialize(files)
     @files = files
     @basename = files.map { |file| File.basename(file) }
